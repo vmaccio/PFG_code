@@ -1,0 +1,151 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/factory/containers/protos/WoodenBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/gctronic/e-puck/protos/E-puck.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/OldSteel.proto"
+
+WorldInfo {
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  position -0.00035962527155177746 0.0009133765330844524 1.3155091953729663
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+WoodenBox {
+  translation 0.761063 0.841776 0.08
+  rotation 0 0 1 -0.785395307179586
+  size 0.1 0.1 0.1
+}
+E-puck {
+  controller "my_controller"
+  version "2"
+}
+WoodenBox {
+  translation 0.918118 -1.03847 0.08
+  rotation 0 0 1 -1.047195307179586
+  name "wooden box(2)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation -1.13621 1.11599 0.08
+  rotation 0 0 1 0.785398
+  name "wooden box(1)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation -1.02603 -0.325117 0.08
+  rotation 0 0 1 -0.785395307179586
+  name "wooden box(4)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation -0.336475 0.805237 0.08
+  name "wooden box(3)"
+  size 0.1 0.1 0.1
+}
+Floor {
+  size 3 3
+}
+Solid {
+  translation 0 1.49 0.05
+  children [
+    DEF Pared Shape {
+      appearance OldSteel {
+      }
+      geometry Box {
+        size 3 0.03 0.1
+      }
+    }
+  ]
+  name "pared 1"
+  boundingObject USE Pared
+}
+Solid {
+  translation 0.001286 -1.48786 0.05
+  children [
+    USE Pared
+  ]
+  name "pared 2"
+  boundingObject USE Pared
+}
+Solid {
+  translation -1.49 -3.63633e-06 0.05
+  rotation 0 0 1 1.5708
+  children [
+    USE Pared
+  ]
+  name "pared 3"
+  boundingObject USE Pared
+}
+Solid {
+  translation 0.27 -8.44973e-07 0.05
+  rotation 0 0 1 1.5708
+  children [
+    USE Pared
+  ]
+  name "pared 4"
+  boundingObject USE Pared
+}
+Solid {
+  translation -0.532289 -0.670908 0.14
+  rotation 0 0 1 -2.6179953071795863
+  children [
+    DEF BALL_GEOMETRY Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "../../../Descargas/red_brick_wall.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+      geometry Sphere {
+        radius 0.05
+        subdivision 2
+      }
+    }
+  ]
+  name "solid2"
+  boundingObject DEF BALL_GEOMETRY Shape {
+    appearance PBRAppearance {
+      metalness 0
+    }
+    geometry Sphere {
+      radius 0.05
+      subdivision 2
+    }
+  }
+  physics Physics {
+  }
+}
+Solid {
+  translation 0.74197 0.123122 0.2
+  children [
+    DEF BALL_GEOMETRY Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "../../../Descargas/red_brick_wall.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+      geometry Sphere {
+        radius 0.05
+        subdivision 2
+      }
+    }
+  ]
+  boundingObject USE BALL_GEOMETRY
+  physics Physics {
+  }
+}
