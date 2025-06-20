@@ -14,12 +14,12 @@
 #include <semaphore.h>
 #include "datosCompartidos.h"
 
-int joystickx, joysticky, limite_cm_aviso, avisoObstaculo, infrarrojos, max_speed, flag_evasion;
-float distancia, totalGiroGrados, resta
-double totalGiroVirtual, dist_v;
+static int joystickx, joysticky, limite_cm_aviso, avisoObstaculo, infrarrojos, max_speed, flag_evasion;
+static float distancia, totalGiroGrados, resta
+static double totalGiroVirtual, dist_v;
 
-sem_t joystickx_sem, joysticky_sem, limite_cm_aviso_sem, avisoObstaculo_sem, infrarrojos_sem, max_speed_sem, flag_evasion_sem;
-sem_t distancia_sem, totalGiroGrados_sem, resta_sem, totalGiroVirtual_sem, dist_v_sem;
+static sem_t joystickx_sem, joysticky_sem, limite_cm_aviso_sem, avisoObstaculo_sem, infrarrojos_sem, max_speed_sem, flag_evasion_sem;
+static sem_t distancia_sem, totalGiroGrados_sem, resta_sem, totalGiroVirtual_sem, dist_v_sem;
 
 void init_semaforos_variables_compartidas() {
     sem_init(&joystickx_sem, 0, 1);

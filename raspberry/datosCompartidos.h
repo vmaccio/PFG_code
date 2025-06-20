@@ -1,14 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <stdint.h>
+#include <softPwm.h>
+#include <wiringPi.h>
+#include <math.h>
+#include <time.h>
+#include <arpa/inet.h>
+#include "devices.h"
+#include "servoController.h"
+#include <pthread.h>
 #include <semaphore.h>
 
-// Declaración de variables globales
-extern int joystickx, joysticky, limite_cm_aviso, avisoObstaculo, infrarrojos, max_speed, flag_evasion;
-extern float distancia, totalGiroGrados, resta;
-extern double totalGiroVirtual, dist_v;
+/* // Declaración de variables globales
+static int joystickx, joysticky, limite_cm_aviso, avisoObstaculo, infrarrojos, max_speed, flag_evasion;
+static float distancia, totalGiroGrados, resta;
+static double totalGiroVirtual, dist_v;
 
 // Declaración de semáforos
-extern sem_t joystickx_sem, joysticky_sem, limite_cm_aviso_sem, avisoObstaculo_sem, infrarrojos_sem, max_speed_sem, flag_evasion_sem;
-extern sem_t distancia_sem, totalGiroGrados_sem, resta_sem, totalGiroVirtual_sem, dist_v_sem;
-
+static sem_t joystickx_sem, joysticky_sem, limite_cm_aviso_sem, avisoObstaculo_sem, infrarrojos_sem, max_speed_sem, flag_evasion_sem;
+static sem_t distancia_sem, totalGiroGrados_sem, resta_sem, totalGiroVirtual_sem, dist_v_sem;
+ */
 // Funciones de inicialización
 void init_semaforos_variables_compartidas(void);
 

@@ -12,3 +12,5 @@ void moverServoPrioritario(int pwm);
 void moverServo(int pwm);
 
 void liberarServo();
+
+void init_servoOcupado();

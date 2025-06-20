@@ -259,6 +259,7 @@ int main(void)
 
 	// Inicializamos la libreria datosCompartidos
 	init_semaforos_variables_compartidas();
+	init_servoOcupado();
 
 	// Iniciamos los devices con todos los pines
 	printf("Testing devices ... \n");
