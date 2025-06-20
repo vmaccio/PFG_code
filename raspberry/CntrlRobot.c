@@ -12,29 +12,30 @@
 #include "servoController.h"
 #include <pthread.h>
 #include <semaphore.h>
+#include "datosCompartidos.h"
 
 //Inicializo las variables que se van a usar a lo largo de la ejecucion
 #define NUM_THREADS 4
 #define MAX_SPEED_CLOCKWISE 130
 #define MAX_SPEED_COUNTER_CLOCKWISE 170
 
-    int sock = 0, valread, valor_leds, i, volante, velocidad, joystickx, joysticky, boton, devices, infrarrojos;
-	int analog_sensors[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	int Xgyro, Ygyro = 0;
+    int sock = 0, valread, i, boton, devices;
+	//int joystickx, joysticky, infrarrojos;
+	//int analog_sensors[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	struct sockaddr_in serv_addr;
-	float distancia = 0.0;
-	double dist_v = '0', dist_v_ant = '0';
+	//float distancia = 0.0;
+	//double dist_v = '0';
 	char buffer[1024] = {0};
 	char combined_data[256] = {0};
 	char temp_buffer[32];
 	int dist_alerta = 1024;
-	int flag_evasion = 0;
-	int limite_cm_aviso = 5;
-	int max_speed;
-	float totalGiroGrados;
-	double totalGiroVirtual;
-	int avisoObstaculo = 0;
-	float resta = 0;
+	//int flag_evasion = 0;
+	//int limite_cm_aviso = 5;
+	//int max_speed;
+	//float totalGiroGrados;
+	//double totalGiroVirtual;
+	//int avisoObstaculo = 0;
+	//float resta = 0;
 	
 
 
@@ -43,7 +44,7 @@ void *proximidad (){
 	while (1)
 	{
 		//Leo la distancia del ultrasonidos (cm)
-		distancia = getDistance();
+		set_distancia(getDistance());
 		//Leo el potenciometro deslizante (0-1023)
 		dist_alerta = read_single_sensor(3);
 		dist_alerta = dist_alerta / 256;
@@ -51,38 +52,34 @@ void *proximidad (){
 		switch (dist_alerta)
 		{
 		case 0:
-			limite_cm_aviso = 10;
+			set_limite_cm_aviso(10);
 			break;
 		case 1:
-			limite_cm_aviso = 20;
+			set_limite_cm_aviso(20);
 			break;
 		case 2:
-			limite_cm_aviso = 30;
+			set_limite_cm_aviso(30);
 			break;
 		case 3:
-			limite_cm_aviso = 40;
+			set_limite_cm_aviso(40);
 			break;		
 		default:
-			limite_cm_aviso = 20;
+			set_limite_cm_aviso(20);
 			break;
 		}
 
 		//Si alguno de los sensores de distanicia lee por debajo del limite
 		//Giro el robot para evitarlo y marco el flag a 1 para que le virtual tambien gire
-		if (distancia <= limite_cm_aviso || dist_v <= limite_cm_aviso){
-			flag_evasion = 1;
+		if (get_distancia() <= get_limite_cm_aviso() || get_dist_v() <= get_limite_cm_aviso()){
+			set_flag_evasion(1);
 			moverServoPrioritario(0);
-			//printf("Objeto detectado\n");
-			avisoObstaculo = 1;
 			
-			while (distancia <= limite_cm_aviso || dist_v <= limite_cm_aviso)
+			while (get_distancia() <= get_limite_cm_aviso() || get_dist_v() <= get_limite_cm_aviso())
 			{
 				moverServoPrioritario(170);
-				distancia = getDistance();
-				//printf("Objeto detectado\n");
+				set_distancia(getDistance());
 			}
-			flag_evasion = 0;
-			avisoObstaculo = 0;
+			set_flag_evasion(0);
 			moverServoPrioritario(0);
 			liberarServo();
 		}
@@ -96,46 +93,46 @@ void *movimiento (){
 	while (1)
 	{
 		//Leo el Joystick, el potenciometro giratorio y el sensor infrarojo
-		joystickx = read_single_sensor(1);
-		joysticky = read_single_sensor(4);
+		set_joystickx(read_single_sensor(1));
+		set_joysticky(read_single_sensor(4));
 		
-		max_speed = read_single_sensor(2)/1024;
-		infrarrojos = read_infrared();
+		set_max_speed(read_single_sensor(2)/1024);
+		set_infrarrojos(read_infrared());
 		
-		switch (infrarrojos){//si esta en 1 el Josytick controla el robot
+		switch (get_infrarrojos()){//si esta en 1 el Josytick controla el robot
 		case 1: 
 			//marco 400-600 como zona muerta para evitar giros no deseados
-			if(joysticky >= 400 && joysticky <= 600){
-				if(joystickx < 400){
+			if(get_joysticky() >= 400 && get_joysticky() <= 600){
+				if(get_joystickx() < 400){
 					//atras
 					set_led_1(1);
-				}else if (joystickx > 600)
+				}else if (get_joystickx() > 600)
 				{
 					//delante
 					set_led_2(1);
-				}else if (joystickx >= 400 && joystickx <= 600)
+				}else if (get_joystickx() >= 400 && get_joystickx() <= 600)
 				{
 					//quieto
 					set_led_1(0);
 					set_led_2(0);
 				}
 				moverServo(151);
-			}else if (joysticky < 200)
+			}else if (get_joysticky() < 200)
 			{
 				//giro izq
 				moverServo(130);
 			}
-			else if (joysticky < 400)
+			else if (get_joysticky() < 400)
 			{
 				//giro izq
 				moverServo(145);
 			}
-			else if (joysticky > 800)
+			else if (get_joysticky() > 800)
 			{
 				//giro drch
 				moverServo(170);
 			}
-			else if (joysticky > 600)
+			else if (get_joysticky() > 600)
 			{
 				//giro drch
 				moverServo(155);
@@ -154,13 +151,13 @@ void *movimiento (){
 void *info (){
 	while(1){
 		system("clear");
-		printf("Distancia a objeto: %.2fcm \t Limite de deteccion: %dcm\n", distancia, limite_cm_aviso);
-		printf("Alerta de obstaculo: %d\n", avisoObstaculo);
-		printf("Joystick X: %d \t Joystick Y: %d\n", joystickx, joysticky);
-		printf("Infrarojos: %d\n", infrarrojos);
-		printf("Posicion: %.2fº\n", totalGiroGrados);
-		printf("Posicion virtual: %.2fº\t Desviacion: %.2f\n", totalGiroVirtual, resta);
-		printf("Distancia a objeto virtual: %.2fcm\n", dist_v);
+		printf("Distancia a objeto: %.2fcm \t Limite de deteccion: %dcm\n", get_distancia(), get_limite_cm_aviso());
+		printf("Alerta de obstaculo: %d\n", get_flag_evasion());
+		printf("Joystick X: %d \t Joystick Y: %d\n", get_joystickx(), get_joysticky());
+		printf("Infrarojos: %d\n", get_infrarrojos());
+		printf("Posicion: %.2fº\n", get_totalGiroGrados());
+		printf("Posicion virtual: %.2fº\t Desviacion: %.2f\n", get_totalGiroVirtual(), get_resta());
+		printf("Distancia a objeto virtual: %.2fcm\n", get_dist_v());
 		
 		usleep(250000);
 	}
@@ -170,8 +167,8 @@ void *info (){
 void *calibracion (){
 	while (1)
 	{
-		totalGiroGrados += leerGiroscopioX360();
-		resta = abs(totalGiroGrados - totalGiroVirtual);
+		update_totalGiroGrados(leerGiroscopioX360());
+		set_resta(abs(get_totalGiroGrados() - get_totalGiroVirtual()));
 		usleep(103);
 	}
 	pthread_exit (NULL);
@@ -182,17 +179,17 @@ void *conexion (){
 	while (1)
 	{	
 		//Concatenamos en un string todos los datos a enviar
-		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", infrarrojos);
+		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", get_infrarrojos());
 		strcat(combined_data, temp_buffer);
-		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", max_speed);
+		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", get_max_speed());
 		strcat(combined_data, temp_buffer);
-		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", joystickx);
+		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", get_joystickx());
 		strcat(combined_data, temp_buffer);
-		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", joysticky);
+		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", get_joysticky());
 		strcat(combined_data, temp_buffer);
-		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", flag_evasion);
+		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", get_flag_evasion());
 		strcat(combined_data, temp_buffer);
-		snprintf(temp_buffer, sizeof(temp_buffer), "%f", totalGiroGrados);
+		snprintf(temp_buffer, sizeof(temp_buffer), "%f", get_totalGiroGrados());
 		strcat(combined_data, temp_buffer);
 		// Mandamos el array por socket
 		send(sock, combined_data, strlen(combined_data), 0);
@@ -216,8 +213,8 @@ void *conexion (){
             if (token != NULL) {
 				//Conversion del segundo valor
                 temp_giro_v = atof(token);
-                dist_v = temp_dist_v;
-                totalGiroVirtual = temp_giro_v;
+                set_dist_v(temp_dist_v);
+                set_totalGiroVirtual(temp_giro_v);
             } else {//En caso de error se imprime por pantalla
                 printf("Segundo valor no recibido: %s\n", buffer);
             }
@@ -259,6 +256,9 @@ int main(void)
 		printf("\n Falló la conexión \n");
 		return -1;
 	}
+
+	// Inicializamos la libreria datosCompartidos
+	init_semaforos_variables_compartidas();
 
 	// Iniciamos los devices con todos los pines
 	printf("Testing devices ... \n");
