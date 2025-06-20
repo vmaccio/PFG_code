@@ -14,6 +14,8 @@
 #include <semaphore.h>
 #include "datosCompartidos.h"
 
+
+//Prueba git
 //Inicializo las variables que se van a usar a lo largo de la ejecucion
 #define NUM_THREADS 4
 #define MAX_SPEED_CLOCKWISE 130
