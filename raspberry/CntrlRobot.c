@@ -290,10 +290,10 @@ int main(void)
 		if (boton == 1)
 		{
 			i = 0;
-			joystickx = read_single_sensor(1);
-			if(joystickx < 300){
+			set_joystickx(read_single_sensor(1));
+			if(get_joystickx() < 300){
 				moverServo(140);
-			}else if (joystickx > 700){
+			}else if (get_joystickx() > 700){
 				moverServo(150);
 			}else{
 				moverServo(151);

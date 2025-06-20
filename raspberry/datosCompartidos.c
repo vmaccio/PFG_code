@@ -15,7 +15,7 @@
 #include "datosCompartidos.h"
 
 static int joystickx, joysticky, limite_cm_aviso, avisoObstaculo, infrarrojos, max_speed, flag_evasion;
-static float distancia, totalGiroGrados, resta
+static float distancia, totalGiroGrados, resta;
 static double totalGiroVirtual, dist_v;
 
 static sem_t joystickx_sem, joysticky_sem, limite_cm_aviso_sem, avisoObstaculo_sem, infrarrojos_sem, max_speed_sem, flag_evasion_sem;
