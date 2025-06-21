@@ -85,7 +85,7 @@ void *proximidad (){
 			moverServoPrioritario(0);
 			liberarServo();
 		}
-		usleep(100);
+		usleep(1250);
 	}
 	pthread_exit (NULL);
 }
@@ -145,7 +145,7 @@ void *movimiento (){
 			
 			break;
 		}
-		usleep(101);
+		usleep(2500);
 	}
 	pthread_exit (NULL);
 }	 
@@ -171,7 +171,8 @@ void *calibracion (){
 	{
 		update_totalGiroGrados(leerGiroscopioX360());
 		set_resta(abs(get_totalGiroGrados() - get_totalGiroVirtual()));
-		usleep(103);
+		//es el unico tan bajo porque sin no funcionaba bien
+		usleep(100);
 	}
 	pthread_exit (NULL);
 }
@@ -225,7 +226,7 @@ void *conexion (){
         }
 		//Vacio el buffer para el proximo envio
 		memset(buffer, 0, sizeof(buffer));
-		usleep(104);
+		usleep(1250);
 	}
 	
 	pthread_exit (NULL);
