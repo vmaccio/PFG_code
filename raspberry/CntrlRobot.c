@@ -180,7 +180,7 @@ void *calibracion (){
 void *conexion (){
 	sleep(1);
 	while (1)
-	{	
+	{	 
 		//Concatenamos en un string todos los datos a enviar
 		snprintf(temp_buffer, sizeof(temp_buffer), "%d ", get_infrarrojos());
 		strcat(combined_data, temp_buffer);
