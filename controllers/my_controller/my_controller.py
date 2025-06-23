@@ -79,6 +79,7 @@ def make_angle_tracker():
 tracker = make_angle_tracker()
 left_speed = 0
 right_speed = 0
+temp_max_speed = 0
 
 while robot.step(TIME_STEP) != -1:
     if not connected:
@@ -124,6 +125,10 @@ while robot.step(TIME_STEP) != -1:
                 # Uso los dos de delante (0 y 7) como referencia de objetos delante
                 #distancia_objeto_virtual = min(psValues[0], psValues[7])
                 #print(distancia_objeto_virtual)
+                if(max_speed < 512):
+                    temp_max_speed = 3
+                else:
+                    temp_max_speed = 1
 
                 if flag_evasion == 1: #se ha detectado obstaluclo en mundo real
                     left_speed = MAX_SPEED
@@ -132,14 +137,14 @@ while robot.step(TIME_STEP) != -1:
                     if infrarrojos == 1:
                         if joysticky >= 400 and joysticky <= 600:
                             if joystickx < 200:
-                                left_speed = -MAX_SPEED
-                                right_speed = -MAX_SPEED
+                                left_speed = -MAX_SPEED/temp_max_speed
+                                right_speed = -MAX_SPEED/temp_max_speed
                             elif joystickx < 400:
                                 left_speed = -MAX_SPEED/3
                                 right_speed = -MAX_SPEED/3
                             elif joystickx > 800:
-                                left_speed = MAX_SPEED
-                                right_speed = MAX_SPEED
+                                left_speed = MAX_SPEED/temp_max_speed
+                                right_speed = MAX_SPEED/temp_max_speed
                             elif joystickx > 600:
                                 left_speed = MAX_SPEED/3
                                 right_speed = MAX_SPEED/3
@@ -156,14 +161,14 @@ while robot.step(TIME_STEP) != -1:
                                     left_speed = 0
                                     right_speed = 0
                         elif joysticky < 200:
-                            left_speed = MAX_SPEED
-                            right_speed = -MAX_SPEED
+                            left_speed = MAX_SPEED/temp_max_speed
+                            right_speed = -MAX_SPEED/temp_max_speed
                         elif joysticky < 400:
                             left_speed = MAX_SPEED/3
                             right_speed = -MAX_SPEED/3
                         elif joysticky > 800:
-                            left_speed = -MAX_SPEED
-                            right_speed = MAX_SPEED
+                            left_speed = -MAX_SPEED/temp_max_speed
+                            right_speed = MAX_SPEED/temp_max_speed
                         elif joysticky > 600:
                             left_speed = -MAX_SPEED/3
                             right_speed = MAX_SPEED/3

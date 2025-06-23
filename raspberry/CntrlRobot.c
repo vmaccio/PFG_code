@@ -92,13 +92,21 @@ void *proximidad (){
 
 //En este hilo se gestiona el movimiento del robot mediante el Joystick
 void *movimiento (){
+	int temp_max_speed = 0;
 	while (1)
 	{
 		//Leo el Joystick, el potenciometro giratorio y el sensor infrarojo
 		set_joystickx(read_single_sensor(1));
 		set_joysticky(read_single_sensor(4));
 		
-		set_max_speed(read_single_sensor(2)/1024);
+		set_max_speed(read_single_sensor(2));
+		if (get_max_speed() < 512)
+		{
+			temp_max_speed=15;
+		}else{
+			temp_max_speed=0;
+		}
+		
 		set_infrarrojos(read_infrared());
 		
 		switch (get_infrarrojos()){//si esta en 1 el Josytick controla el robot
@@ -122,7 +130,7 @@ void *movimiento (){
 			}else if (get_joysticky() < 200)
 			{
 				//giro izq
-				moverServo(130);
+				moverServo(130+temp_max_speed);
 			}
 			else if (get_joysticky() < 400)
 			{
@@ -132,7 +140,7 @@ void *movimiento (){
 			else if (get_joysticky() > 800)
 			{
 				//giro drch
-				moverServo(170);
+				moverServo(170-temp_max_speed);
 			}
 			else if (get_joysticky() > 600)
 			{
