@@ -105,12 +105,11 @@ while robot.step(TIME_STEP) != -1:
                 #Sensor Larga distancia
                 #Resto 20 porque el robot chocando contra la pared da valor 20
                 distanciaLarga = long_range_sensor.getValue() - 20
-                #print("Long-range sensor value:", distanciaLarga)
+                print("Long-range sensor value:", distanciaLarga)
 
                 gyroZ = gyro.getValues()[2] / LSB_SENSITIVITY
-
                 angulo_total = angulo_total + tracker(gyroZ)
-                print(gyroZ + "," + angulo_total)
+                #print(angulo_total)
 
                 # Asignamos a los valores el peligro de proximidad
                 # Uso los dos de delante (0 y 7) como referencia de objetos delante
