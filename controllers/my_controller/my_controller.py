@@ -24,16 +24,6 @@ LSB_SENSITIVITY = 131
 # Crea la instancia del robot
 robot = Robot()
 
-# Inicializar sensores de proximidad
-# Inicializamos todos pero solo usaremos ps0 y ps7 que son los dos delanteros
-# ps = []
-# psNames = ['ps0', 'ps1', 'ps2', 'ps3', 'ps4', 'ps5', 'ps6', 'ps7']
-# for i in range(8):
-#     ps.append(robot.getDevice(psNames[i]))
-#     ps[i].enable(TIME_STEP)
-    
-# print(f"ps =  {ps}")
-
 #prueba sensor distancia
 long_range_sensor = robot.getDevice("tof")
 long_range_sensor.enable(TIME_STEP)
@@ -115,11 +105,12 @@ while robot.step(TIME_STEP) != -1:
                 #Sensor Larga distancia
                 #Resto 20 porque el robot chocando contra la pared da valor 20
                 distanciaLarga = long_range_sensor.getValue() - 20
-                print("Long-range sensor value:", distanciaLarga)
+                #print("Long-range sensor value:", distanciaLarga)
 
                 gyroZ = gyro.getValues()[2] / LSB_SENSITIVITY
+
                 angulo_total = angulo_total + tracker(gyroZ)
-                #print(angulo_total)
+                print(gyroZ + "," + angulo_total)
 
                 # Asignamos a los valores el peligro de proximidad
                 # Uso los dos de delante (0 y 7) como referencia de objetos delante
